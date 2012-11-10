@@ -402,6 +402,7 @@
        (gen-css-url)
        (prn "<link rel=\"shortcut icon\" href=\"" favicon-url* "\">")
        (tag script (pr votejs*))
+       (tag script (pr agesjs*))
        (tag title (pr ,title)))
      (tag body 
        (center
@@ -552,6 +553,43 @@ function vote(node) {
 
   return false; // cancel browser nav
 } ")
+
+(= agesjs* "
+function updateAges() {
+    function ctime() {
+        return Math.floor(new Date().valueOf() / 1000);
+    }
+
+    function plural(s, i) {
+        return i + ' ' + s + (i == 1 ? '' : 's');
+    }
+
+    function textAge(minutes) {
+        if(minutes >= 1440) {
+            return plural('day', Math.floor(minutes / 1440));
+        }
+        else if(minutes >= 60) {
+            return plural('hour', Math.floor(minutes / 60));
+        }
+        else {
+            return plural('minute', minutes);
+        }
+    }
+
+    var spans = document.getElementsByTagName('span');
+
+    for(var i = 0; i < spans.length; i++) {
+        if(spans[i].className == 'date') {
+            var created = parseInt(spans[i].getAttribute('data-time'));
+            var minutes = Math.floor((ctime() - created) / 60);
+            spans[i].innerHTML = textAge(minutes);
+        }
+    }
+    setTimeout(updateAges, 1000);
+}
+
+setTimeout(updateAges, 0);
+" )
 
 
 ; Page top
@@ -771,7 +809,7 @@ function vote(node) {
           p (profile subject))
     `((string  user       ,subject                                  t   nil)
       (string  name       ,(p 'name)                               ,m  ,m)
-      (string  created    ,(text-age:user-age subject)              t   nil)
+      (string  created    ,(text-age:uvar subject created)          t   nil)
       (string  password   ,(resetpw-link)                          ,w   nil)
       (string  saved      ,(saved-link user subject)               ,u   nil)
       (int     auth       ,(p 'auth)                               ,e  ,a)
@@ -1136,7 +1174,7 @@ function vote(node) {
 ; redefined later
 
 (def byline (i user)
-  (pr " by @(tostring (userlink user i!by)) @(text-age:item-age i) "))
+  (pr " by @(tostring (userlink user i!by)) " (text-age i!time)))
 
 (def user-url (user) (+ "user?id=" user))
 
@@ -1309,12 +1347,9 @@ function vote(node) {
 (def logvote (ip user story)
   (newslog ip user 'vote (story 'id) (list (story 'title))))
 
+(attribute span data-time opnum)
 (def text-age (a)
-  (tostring
-    (if (>= a 1440) (pr (plural (trunc (/ a 1440)) "day")    " ago")
-        (>= a   60) (pr (plural (trunc (/ a 60))   "hour")   " ago")
-                    (pr (plural (trunc a)          "minute") " ago"))))
-
+  (tostring " " (tag (span class 'date data-time a))))
 
 ; Voting
 
