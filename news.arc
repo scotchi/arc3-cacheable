@@ -402,13 +402,13 @@
        (gen-css-url)
        (prn "<link rel=\"shortcut icon\" href=\"" favicon-url* "\">")
        (tag script (pr votejs*))
-       (tag script (pr agesjs*))
        (tag title (pr ,title)))
      (tag body 
        (center
          (tag (table border 0 cellpadding 0 cellspacing 0 width "85%"
                      bgcolor sand)
-           ,@body)))))
+           ,@body)))
+     (tag script (pr agesjs*))))
 
 (= pagefns* nil)
 
@@ -588,7 +588,7 @@ function updateAges() {
     setTimeout(updateAges, 1000);
 }
 
-setTimeout(updateAges, 0);
+updateAges();
 " )
 
 
