@@ -566,13 +566,13 @@ function updateAges() {
 
     function textAge(minutes) {
         if(minutes >= 1440) {
-            return plural('day', Math.floor(minutes / 1440));
+            return plural('day', Math.floor(minutes / 1440)) + ' ago';
         }
         else if(minutes >= 60) {
-            return plural('hour', Math.floor(minutes / 60));
+            return plural('hour', Math.floor(minutes / 60)) + ' ago';
         }
         else {
-            return plural('minute', minutes);
+            return plural('minute', minutes) + ' ago';
         }
     }
 
