@@ -1178,7 +1178,7 @@ updateAges();
 ; redefined later
 
 (def byline (i user)
-  (pr " by @(tostring (userlink user i!by)) " (text-age i!time)))
+  (pr " by @(tostring (userlink user i!by)) @(text-age i!time)"))
 
 (def user-url (user) (+ "user?id=" user))
 
