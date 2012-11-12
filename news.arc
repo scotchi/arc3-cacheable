@@ -570,13 +570,13 @@ function updateAges() {
 
     function textAge(minutes) {
         if(minutes >= 1440) {
-            return plural('day', Math.floor(minutes / 1440)) + ' ago';
+            return plural('day', Math.floor(minutes / 1440));
         }
         else if(minutes >= 60) {
-            return plural('hour', Math.floor(minutes / 60)) + ' ago';
+            return plural('hour', Math.floor(minutes / 60));
         }
         else {
-            return plural('minute', minutes) + ' ago';
+            return plural('minute', minutes);
         }
     }
 
@@ -586,7 +586,7 @@ function updateAges() {
         if(spans[i].className == 'date') {
             var created = parseInt(spans[i].getAttribute('data-time'));
             var minutes = Math.floor((ctime() - created) / 60);
-            spans[i].innerHTML = textAge(minutes);
+            spans[i].innerHTML = ' ' + textAge(minutes) + ' ago';
         }
     }
     setTimeout(updateAges, 1000);
@@ -1353,7 +1353,7 @@ updateAges();
 
 (attribute span data-time opnum)
 (def text-age (a)
-  (tostring " " (tag (span class 'date data-time a))))
+  (tag (span class 'date data-time a)))
 
 ; Voting
 
