@@ -570,3 +570,5 @@ Connection: close"))
 ; gensymed names, and so the receiving fn gets args that are not
 ; strings but parsed values.
 
+(def purge-from-proxy (resource)
+  (tcp-send "localhost" 80 (+ "PURGE /" resource "\r\n\n")))
