@@ -1008,6 +1008,15 @@
                                    (let-values (((us them) (tcp-addresses out)))
                                                them))))))))
 
+; just does a fire-and forget write to a tcp port
+
+(xdef tcp-send (lambda (host port data)
+                 (let-values (((in out) (tcp-connect host port)))
+                   (fprintf out data)
+                   (flush-output out)
+                   (close-input-port in)
+                   (close-output-port out))))
+
 (xdef new-thread thread)
 (xdef kill-thread kill-thread)
 (xdef break-thread break-thread)
