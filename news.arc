@@ -132,7 +132,9 @@
 
 (def save-votes (u) (save-table (votes* u) (+ votedir* u)))
 
-(def save-prof  (u) (save-table (profs* u) (+ profdir* u)))
+(def save-prof (u)
+  (save-table (profs* u) (+ profdir* u))
+  (purge-from-proxy (user-url u)))
 
 (mac uvar (u k) `((profile ,u) ',k))
 
@@ -232,7 +234,9 @@
 
 (def live (i) (nor i!dead i!deleted))
 
-(def save-item (i) (save-table i (+ storydir* i!id)))
+(def save-item (i)
+  (save-table i (+ storydir* i!id))
+  (purge-from-proxy (item-url i!id)))
 
 (def kill (i how)
   (unless i!dead
@@ -1409,6 +1413,7 @@ updateAges();
       (if (admin user) (pushnew 'nokill i!keys))
       (push vote i!votes)
       (save-item i)
+      (each a (ancestors i) (purge-from-proxy (item-url a!id)))
       (push (list (seconds) i!id i!by (sitename i!url) dir)
             (uvar user votes))
       (= ((votes* user) i!id) vote)
